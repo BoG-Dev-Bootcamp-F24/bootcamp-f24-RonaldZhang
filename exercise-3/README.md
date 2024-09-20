@@ -5,7 +5,7 @@ In this exercise, bootcampers will learn about the parts of an API and how to ca
 
 ## Submission
 See the submission instructions down below. 
-- **Due Date**:
+- **Due Date**: 9/17/2024
   
 ## Instructions
 In this exercise, you will choose an api from the list of public apis and create a Postman collection to send some requests to it. https://github.com/public-apis/public-apis?tab=readme-ov-file

@@ -2,13 +2,13 @@ import React from "react";
 import styles from "./Navbar.module.css";
 
 export default function Navbar({ line, stationData, onStationSelect }) {
-    // Log the current line and station data to verify the structure
-    console.log("Current Line (Navbar):", line);
-    console.log("Station Data (Navbar):", stationData);
+    const currLine = line.toUpperCase();
+    
+    console.log("Current Line:", currLine);
+    console.log("Station Data:", stationData);
 
-    // Filter stations by line without converting to lowercase
     const lineStations = stationData
-        .filter((station) => station.LINE === line) // Ensure exact match
+        .filter((station) => station.LINE === currLine)
         .map((station) => station.STATION_NAME);
 
     console.log("Filtered Line Stations:", lineStations);
@@ -36,7 +36,7 @@ export default function Navbar({ line, stationData, onStationSelect }) {
                             </button>
                         ))
                     ) : (
-                        <p>No stations available for this line. (Line: {line})</p>
+                        <p>No stations available for this line. (Line: {currLine})</p>
                     )}
                 </div>
             </div>

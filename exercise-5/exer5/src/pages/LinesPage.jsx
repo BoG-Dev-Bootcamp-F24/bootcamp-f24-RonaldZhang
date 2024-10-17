@@ -4,27 +4,23 @@ import TrainList from '../components/TrainList';
 import axios from "axios";
 import styles from "./LinesPage.module.css";
 
-// Fetch station data
 const fetchStationData = async () => await axios.get("http://localhost:3000/api/stations");
 
-// Fetch train data
 const fetchTrainData = async () => await axios.get("http://localhost:3000/api/trains");
 
 export default function LinesPage() {
-  const [currColor, setCurrColor] = useState("red"); // Current line color
-  const [stationData, setStationData] = useState([]); // All station data
-  const [trainData, setTrainData] = useState([]); // All train data
-  const [selectedStation, setSelectedStation] = useState(null); // The station the user selects
+  const [currColor, setCurrColor] = useState("RED"); // Set to uppercase "RED"
+  const [stationData, setStationData] = useState([]); 
+  const [trainData, setTrainData] = useState([]); 
+  const [selectedStation, setSelectedStation] = useState(null); 
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const stations = await fetchStationData();
         const trains = await fetchTrainData();
-        console.log("Fetched stations (LinesPage):", stations.data); // Log station data to verify
-        console.log("Fetched trains (LinesPage):", trains.data); // Log train data to verify
-        setStationData(stations.data); // Set stations
-        setTrainData(trains.data); // Set trains
+        setStationData(stations.data); 
+        setTrainData(trains.data); 
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -32,22 +28,20 @@ export default function LinesPage() {
     fetchData();
   }, []);
 
-  // Handle station selection
   const handleStationSelect = (station) => {
-    console.log("Station selected:", station); // Log selected station
-    setSelectedStation(station); // Update state with selected station
+    console.log("Station selected:", station);
+    setSelectedStation(station);
   };
 
-  // Ensure trainData and selectedStation are valid
   const filteredTrains = selectedStation && trainData.length > 0
     ? trainData.filter((train) =>
         train.STATION_NAME && selectedStation && 
         typeof train.STATION_NAME === "string" && typeof selectedStation === "string" && 
         train.STATION_NAME.trim().toLowerCase() === selectedStation.trim().toLowerCase()
       )
-    : trainData; // Show all trains if no station is selected or if trainData is empty
+    : trainData;
 
-  console.log("Filtered Trains:", filteredTrains);  // Log the filtered train data to check if the filtering is working
+  console.log("Filtered Trains:", filteredTrains);
 
   return (
     <div className={styles.page_container}>
@@ -63,7 +57,6 @@ export default function LinesPage() {
           />
         </div>
         <div className={styles.train_list_column}>
-          {/* Ensure there is data to display, or show a message */}
           {filteredTrains.length > 0 ? (
             <TrainList line={currColor} trainData={filteredTrains} />
           ) : (

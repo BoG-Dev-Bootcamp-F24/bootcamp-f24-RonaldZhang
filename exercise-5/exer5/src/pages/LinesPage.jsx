@@ -1,61 +1,74 @@
 import { useState, useEffect } from "react";
-import Navbar from "../components/Navbar";
-import TrainList from "../components/TrainList";
+import NavBar from '../components/Navbar';
+import TrainList from '../components/TrainList';
 import axios from "axios";
-
 import styles from "./LinesPage.module.css";
 
+// Fetch station data
 const fetchStationData = async () => await axios.get("http://localhost:3000/api/stations");
+
+// Fetch train data
 const fetchTrainData = async () => await axios.get("http://localhost:3000/api/trains");
 
 export default function LinesPage() {
-  const [currColor, setCurrColor] = useState("red"); 
-  const [stationData, setStationData] = useState([]);
-  const [trainData, setTrainData] = useState([]);
-  const [selectedStation, setSelectedStation] = useState(null); 
+  const [currColor, setCurrColor] = useState("red"); // Current line color
+  const [stationData, setStationData] = useState([]); // All station data
+  const [trainData, setTrainData] = useState([]); // All train data
+  const [selectedStation, setSelectedStation] = useState(null); // The station the user selects
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const stationsResponse = await fetchStationData();
-        const trainsResponse = await fetchTrainData();
-        setStationData(stationsResponse.data);  // Use the correct variable here
-        setTrainData(trainsResponse.data);
+        const stations = await fetchStationData();
+        const trains = await fetchTrainData();
+        console.log("Fetched stations (LinesPage):", stations.data); // Log station data to verify
+        console.log("Fetched trains (LinesPage):", trains.data); // Log train data to verify
+        setStationData(stations.data); // Set stations
+        setTrainData(trains.data); // Set trains
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
     fetchData();
   }, []);
-  
-  const filteredTrainData = selectedStation
-    ? trainData.filter(train => train.STATION_NAME === selectedStation)
-    : trainData; 
 
-  const handleStationSelect = (stationName) => {
-    setSelectedStation(stationName); 
+  // Handle station selection
+  const handleStationSelect = (station) => {
+    console.log("Station selected:", station); // Log selected station
+    setSelectedStation(station); // Update state with selected station
   };
+
+  // Ensure trainData and selectedStation are valid
+  const filteredTrains = selectedStation && trainData.length > 0
+    ? trainData.filter((train) =>
+        train.STATION_NAME && selectedStation && 
+        typeof train.STATION_NAME === "string" && typeof selectedStation === "string" && 
+        train.STATION_NAME.trim().toLowerCase() === selectedStation.trim().toLowerCase()
+      )
+    : trainData; // Show all trains if no station is selected or if trainData is empty
+
+  console.log("Filtered Trains:", filteredTrains);  // Log the filtered train data to check if the filtering is working
 
   return (
     <div className={styles.page_container}>
       <div className={styles.title_container}>
         <h1>{currColor.toUpperCase()} Line</h1>
       </div>
-      
       <div className={styles.lines_page_container}>
         <div className={styles.navbar_column}>
-          <Navbar line={currColor} stationData={stationData} onStationSelect={handleStationSelect} />
+          <NavBar
+            line={currColor}
+            stationData={stationData}
+            onStationSelect={handleStationSelect}
+          />
         </div>
-
         <div className={styles.train_list_column}>
-          <div className={styles.options_container}>
-            <button>Arriving</button>
-            <button>Scheduled</button>
-            <button>Northbound</button>
-            <button>Southbound</button>
-          </div>
-
-          <TrainList line={currColor} trainData={filteredTrainData} />
+          {/* Ensure there is data to display, or show a message */}
+          {filteredTrains.length > 0 ? (
+            <TrainList line={currColor} trainData={filteredTrains} />
+          ) : (
+            <p>No trains available for the selected station.</p>
+          )}
         </div>
       </div>
     </div>

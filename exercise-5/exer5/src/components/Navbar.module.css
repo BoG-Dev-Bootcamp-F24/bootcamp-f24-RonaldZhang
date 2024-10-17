@@ -1,0 +1,44 @@
+.station_container {
+    width: 100%;
+}
+
+.station_button {
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    width: 90%;
+    margin: 5px 0;
+    font-size: 1em;
+    transition: background-color 0.3s;
+    padding: 10px;
+    color: #d6d2d2;
+    border-radius: 5px;
+    background-color: transparent; 
+}
+
+.instructions {
+    font-size: 1em;
+    color: #d6d2d2;
+    text-align: center;
+    padding: 10px;
+}
+
+.navbar_container {
+    flex-direction: column;
+    background-color: #2c2929;
+    height: 100%;
+    display: flex;
+    width: 100%;
+    align-items: center;
+}
+
+.button_container {
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    display: flex;
+}
+
+.station_button:hover {
+    background-color: #4a4a4a;
+}

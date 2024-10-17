@@ -8,12 +8,16 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect("mongodb+srv://ronaldarezhang:TzMtsfRQ6kGWbhvF@data.mmfva.mongodb.net/?retryWrites=true&w=majority&appName=data", {
+mongoose.connect("mongodb+srv://ronaldarezhang:TzMtsfRQ6kGWbhvF@data.mmfva.mongodb.net/exer5?retryWrites=true&w=majority&appName=data", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
-  .then(() => console.log("MongoDB connected"))
-  .catch(err => console.log(err));
+  .then(() => {
+    console.log("MongoDB connected");
+  })
+  .catch(err => {
+    console.error("MongoDB connection error:", err);
+  });
 
 const trainSchema = new mongoose.Schema({
   DESTINATION: String,
@@ -34,21 +38,14 @@ const trainSchema = new mongoose.Schema({
 });
 
 const stationSchema = new mongoose.Schema({
-  line: {
-    type: String,
-    enum: ["red", "gold", "blue", "green"],
-    required: true
-  },
-  stations: [{
-    type: String,
-    required: true
-  }]
+  STATION_NAME: String,
+  LINE: String
 });
 
 const Train = mongoose.model('Train', trainSchema);
 const Station = mongoose.model('Station', stationSchema);
 
-app.get("/api/trains", async (req, res) => {
+app.get('/api/trains', async (req, res) => {
   const { line } = req.query;
   try {
     let trains;
@@ -59,15 +56,17 @@ app.get("/api/trains", async (req, res) => {
     }
     res.json(trains);
   } catch (err) {
+    console.error("Error fetching train data:", err);
     res.status(500).json({ error: err.message });
   }
 });
 
-app.get("/api/stations", async (req, res) => {
+app.get('/api/stations', async (req, res) => {
   try {
     const stations = await Station.find();
     res.json(stations);
   } catch (err) {
+    console.error("Error fetching station data:", err);
     res.status(500).json({ error: err.message });
   }
 });

@@ -17,17 +17,17 @@ export default function LinesPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const stationsResponse = await fetchStationData(); 
-        const trainsResponse = await fetchTrainData(); 
-        setStationData(stationsResponse.data); 
-        setTrainData(trainsResponse.data);  
+        const stationsResponse = await fetchStationData();
+        const trainsResponse = await fetchTrainData();
+        setStationData(stationsResponse.data);  // Use the correct variable here
+        setTrainData(trainsResponse.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
     fetchData();
   }, []);
-
+  
   const filteredTrainData = selectedStation
     ? trainData.filter(train => train.STATION_NAME === selectedStation)
     : trainData; 
